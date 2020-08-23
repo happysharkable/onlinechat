@@ -1,14 +1,13 @@
 package ru.gb.jt.chat.server.core;
 
-import javax.sql.DataSource;
 import java.sql.*;
 
 public class SqlClient {
 
-    private static Connection connection;
-    private static Statement statement;
+    private Connection connection;
+    private Statement statement;
 
-    synchronized static void connect() {
+    synchronized void connect() {
         try {
             Class.forName("org.sqlite.JDBC");
             connection = DriverManager.getConnection("jdbc:sqlite:chat-server/chat.db");
@@ -18,7 +17,7 @@ public class SqlClient {
         }
     }
 
-    synchronized static void disconnect() {
+    synchronized void disconnect() {
         try {
             connection.close();
         } catch (SQLException e) {
@@ -26,7 +25,7 @@ public class SqlClient {
         }
     }
 
-    synchronized static String getNickname(String login, String password) {
+    synchronized String getNickname(String login, String password) {
         String query = String.format("select nickname from users where login='%s' and password='%s'", login, password);
         try (ResultSet set = statement.executeQuery(query)) {
             if (set.next())

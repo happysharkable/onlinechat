@@ -18,9 +18,11 @@ public class ChatServer implements ServerSocketThreadListener, SocketThreadListe
     private ServerSocketThread server;
     private final DateFormat DATE_FORMAT = new SimpleDateFormat("HH:mm:ss: ");
     private Vector<SocketThread> clients = new Vector<>();
+    private SqlClient sqlClient;
 
     public ChatServer(ChatServerListener listener) {
         this.listener = listener;
+        this.sqlClient = new SqlClient();
     }
 
     public void start(int port) {
@@ -52,13 +54,13 @@ public class ChatServer implements ServerSocketThreadListener, SocketThreadListe
     @Override
     public void onServerStart(ServerSocketThread thread) {
         putLog("Server thread started");
-        SqlClient.connect();
+        sqlClient.connect();
     }
 
     @Override
     public void onServerStop(ServerSocketThread thread) {
         putLog("Server thread stopped");
-        SqlClient.disconnect();
+        sqlClient.disconnect();
         for (int i = 0; i < clients.size(); i++) {
             clients.get(i).close();
         }
@@ -135,7 +137,7 @@ public class ChatServer implements ServerSocketThreadListener, SocketThreadListe
         }
         String login = arr[1];
         String password = arr[2];
-        String nickname = SqlClient.getNickname(login, password);
+        String nickname = sqlClient.getNickname(login, password);
         if (nickname == null) {
             putLog("Invalid login attempt: " + login);
             client.authFail();

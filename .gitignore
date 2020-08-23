@@ -1,5 +1,8 @@
 # Default ignored files
 /.idea
 /out
-/target
 *.iml
+/chat-client/target/
+/chat-library/target/
+/chat-server/target/
+/network/target/
