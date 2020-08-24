@@ -1,5 +1,6 @@
 package ru.gb.jt.chat.server.core;
 
+import javax.sql.DataSource;
 import java.sql.*;
 
 public class SqlClient {
@@ -7,12 +8,18 @@ public class SqlClient {
     private Connection connection;
     private Statement statement;
 
+    public SqlClient(DataSource dataSource) throws SQLException {
+        this(dataSource.getConnection());
+    }
+
+    public SqlClient(Connection connection) {
+        this.connection = connection;
+    }
+
     synchronized void connect() {
         try {
-            Class.forName("org.sqlite.JDBC");
-            connection = DriverManager.getConnection("jdbc:sqlite:chat-server/chat.db");
             statement = connection.createStatement();
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }

@@ -14,15 +14,18 @@ import java.util.Vector;
 
 public class ChatServer implements ServerSocketThreadListener, SocketThreadListener {
 
-    private final ChatServerListener listener;
+    private ChatServerListener listener;
     private ServerSocketThread server;
     private final DateFormat DATE_FORMAT = new SimpleDateFormat("HH:mm:ss: ");
     private Vector<SocketThread> clients = new Vector<>();
     private SqlClient sqlClient;
 
-    public ChatServer(ChatServerListener listener) {
+    public ChatServer(SqlClient sqlClient) {
+        this.sqlClient = sqlClient;
+    }
+
+    public void setChatServerListener(ChatServerListener listener) {
         this.listener = listener;
-        this.sqlClient = new SqlClient();
     }
 
     public void start(int port) {
