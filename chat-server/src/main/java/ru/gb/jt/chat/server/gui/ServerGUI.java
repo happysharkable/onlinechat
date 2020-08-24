@@ -15,23 +15,16 @@ public class ServerGUI extends JFrame implements ActionListener, Thread.Uncaught
     private static final int WIDTH = 600;
     private static final int HEIGHT = 300;
 
-    private final ChatServer chatServer = new ChatServer(this);
+    private ChatServer chatServer;
     private final JButton btnStart = new JButton("Start");
     private final JButton btnStop = new JButton("Stop");
     private final JPanel panelTop = new JPanel(new GridLayout(1, 2));
     private final JTextArea log = new JTextArea();
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() { // Event Dispatching Thread
-                new ServerGUI();
-            }
-        });
-    }
-
-    private ServerGUI() {
+    public ServerGUI(ChatServer chatServer) {
         Thread.setDefaultUncaughtExceptionHandler(this);
+        this.chatServer = chatServer;
+        chatServer.setChatServerListener(this);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setBounds(POS_X, POS_Y, WIDTH, HEIGHT);
         setResizable(false);
